@@ -23,7 +23,7 @@ const menuItems = [
     title: 'База знаний',
     description: 'Гайды и статьи по бизнес-процессам',
     path: '/knowledge',
-    available: false,
+    available: true,
   },
   {
     id: 'news',
@@ -31,7 +31,7 @@ const menuItems = [
     title: 'Новости и анонсы',
     description: 'Мероприятия и изменения в законах',
     path: '/news',
-    available: false,
+    available: true,
   },
 ];
 
