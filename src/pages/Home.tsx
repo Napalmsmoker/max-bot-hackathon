@@ -49,7 +49,7 @@ export const Home = () => {
             color: 'var(--text-primary)',
           }}
         >
-          Бизнес-Навигатор КГУ
+          Бизнес-Навигатор
         </h1>
         <p style={{ fontSize: 14, color: 'var(--text-secondary)', margin: 0 }}>
           Цифровые инструменты для предпринимателей Курганской области
@@ -123,7 +123,7 @@ export const Home = () => {
           textAlign: 'center',
         }}
       >
-        Хакатон MAX 350 · Курганский государственный университет
+        Хакатон MAX 350 · Бизнес-Навигатор
       </div>
     </div>
   );
