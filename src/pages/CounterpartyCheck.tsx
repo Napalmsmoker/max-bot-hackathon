@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SearchInput } from '../components/SearchInput';
 import { CompanyCard } from '../components/CompanyCard';
-import { searchCompanies } from '../data/mockCompanies';
+import { checkCounterparty } from '../api/counterparty';
 import type { Company } from '../types/company';
 
 export const CounterpartyCheck = () => {
@@ -10,21 +10,23 @@ export const CounterpartyCheck = () => {
   const [result, setResult] = useState<Company | null>(null);
   const [loading, setLoading] = useState(false);
   const [notFound, setNotFound] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSearch = (query: string) => {
+  const handleSearch = async (query: string) => {
     setLoading(true);
     setNotFound(false);
     setResult(null);
+    setError(null);
 
-    setTimeout(() => {
-      const found = searchCompanies(query);
-      if (found.length > 0) {
-        setResult(found[0]);
-      } else {
-        setNotFound(true);
-      }
-      setLoading(false);
-    }, 800);
+    const company = await checkCounterparty(query);
+
+    if (company) {
+      setResult(company);
+    } else {
+      setNotFound(true);
+    }
+
+    setLoading(false);
   };
 
   return (
@@ -54,13 +56,7 @@ export const CounterpartyCheck = () => {
         >
           Проверка контрагента
         </h1>
-        <p
-          style={{
-            fontSize: 14,
-            color: 'var(--text-secondary)',
-            margin: 0,
-          }}
-        >
+        <p style={{ fontSize: 14, color: 'var(--text-secondary)', margin: 0 }}>
           Данные из ЕГРЮЛ, ФНС и арбитражных судов
         </p>
       </div>
@@ -80,7 +76,7 @@ export const CounterpartyCheck = () => {
           </div>
         )}
 
-        {notFound && (
+        {notFound && !loading && (
           <div
             style={{
               padding: 20,
@@ -94,9 +90,23 @@ export const CounterpartyCheck = () => {
             <div style={{ fontSize: 32, marginBottom: 8 }}>🔍</div>
             <div style={{ marginBottom: 4 }}>Компания не найдена</div>
             <div style={{ fontSize: 12 }}>
-              Попробуйте ИНН: <code>7707083893</code>, <code>4501123456</code> или{' '}
-              <code>7701234567</code>
+              Попробуйте ИНН: <code>7707083893</code> или{' '}
+              <code>7701999999</code>
             </div>
+          </div>
+        )}
+
+        {error && (
+          <div
+            style={{
+              padding: 16,
+              background: '#FEE2E2',
+              color: '#991B1B',
+              borderRadius: 12,
+              fontSize: 13,
+            }}
+          >
+            ⚠️ {error}
           </div>
         )}
 
@@ -114,7 +124,7 @@ export const CounterpartyCheck = () => {
           textAlign: 'center',
         }}
       >
-        ⚠️ Демо-режим. Данные тестовые. Реальная интеграция с ЕГРЮЛ/ФНС — после MVP.
+        ⚠️ Демо-режим. Данные тестовые. Реальный источник — ЕГРЮЛ/ФНС (планируется).
       </div>
     </div>
   );
